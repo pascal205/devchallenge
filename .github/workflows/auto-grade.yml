@@ -1,0 +1,22 @@
+name: Correction automatique
+
+on:
+  workflow_dispatch:
+    inputs:
+      challenge_id:
+        description: "ID du challenge (uuid, visible dans l'URL de la page challenge)"
+        required: true
+
+jobs:
+  grade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: node scripts/grade.mjs "${{ github.event.inputs.challenge_id }}"
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
